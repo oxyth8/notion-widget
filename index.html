@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> </title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #111318;
+      color: #f5f5f5;
+    }
+
+    .wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 14px;
+      min-height: 220px;
+      background: linear-gradient(90deg, #1a1d25 0%, #111318 100%);
+    }
+
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 190px;
+    }
+
+    .clock-time {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .clock-date {
+      font-size: 24px;
+      color: #d7d7d7;
+    }
+
+    .timer-mode {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f0a43a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .timer-display {
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 18px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #f0a43a;
+      color: #111318;
+    }
+
+    button.secondary {
+      background: #2d3340;
+      color: #f5f5f5;
+    }
+
+    button.ghost {
+      background: #1a1d25;
+      color: #f5f5f5;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .preset {
+      font-size: 14px;
+      color: #bdbdbd;
+    }
+
+    @media (max-width: 900px) {
+      .wrap {
+        grid-template-columns: 1fr;
+      }
+      .clock-time, .timer-display {
+        font-size: 48px;
+      }
+      .clock-date {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div id="clockTime" class="clock-time">00:00:00</div>
+      <div id="clockDate" class="clock-date">00 Ay 0000 Gün</div>
+    </div>
+
+    <div class="card">
+      <div id="timerMode" class="timer-mode">FOCUS</div>
+      <div id="timerDisplay" class="timer-display">25:00</div>
+
+      <div class="buttons">
+        <button id="startPauseBtn">Başlat</button>
+        <button id="resetBtn" class="secondary">Sıfırla</button>
+      </div>
+
+      <div class="buttons">
+        <button id="focusBtn" class="ghost">Focus 25 dk</button>
+        <button id="breakBtn" class="ghost">Mola 5 dk</button>
+      </div>
+
+      <div class="preset">Varsayılan: Focus 25 dk • Mola 5 dk</div>
+    </div>
+  </div>
+
+  <script>
+    // CLOCK - ISTANBUL
+    function updateClock() {
+      const now = new Date();
+
+      const time = now.toLocaleTimeString('tr-TR', {
+        timeZone: 'Europe/Istanbul',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      const date = now.toLocaleDateString('tr-TR', {
+        timeZone: 'Europe/Istanbul',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        weekday: 'long'
+      });
+
+      document.getElementById('clockTime').textContent = time;
+      document.getElementById('clockDate').textContent = date;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // FOCUS TIMER
+    let isRunning = false;
+    let mode = 'focus';
+    let focusDuration = 25 * 60;
+    let breakDuration = 5 * 60;
+    let totalSeconds = focusDuration;
+    let timerInterval = null;
+
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerMode = document.getElementById('timerMode');
+    const startPauseBtn = document.getElementById('startPauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const focusBtn = document.getElementById('focusBtn');
+    const breakBtn = document.getElementById('breakBtn');
+
+    function formatTime(seconds) {
+      const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const s = String(seconds % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function renderTimer() {
+      timerDisplay.textContent = formatTime(totalSeconds);
+      timerMode.textContent = mode === 'focus' ? 'FOCUS' : 'MOLA';
+      startPauseBtn.textContent = isRunning ? 'Duraklat' : 'Başlat';
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      isRunning = false;
+      renderTimer();
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+      isRunning = true;
+      renderTimer();
+
+      timerInterval = setInterval(() => {
+        totalSeconds--;
+
+        if (totalSeconds <= 0) {
+          clearInterval(timerInterval);
+          isRunning = false;
+
+          if (mode === 'focus') {
+            mode = 'break';
+            totalSeconds = breakDuration;
+          } else {
+            mode = 'focus';
+            totalSeconds = focusDuration;
+          }
+
+          renderTimer();
+          return;
+        }
+
+        renderTimer();
+      }, 1000);
+    }
+
+    startPauseBtn.addEventListener('click', () => {
+      if (isRunning) {
+        stopTimer();
+      } else {
+        startTimer();
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      stopTimer();
+      totalSeconds = mode === 'focus' ? focusDuration : breakDuration;
+      renderTimer();
+    });
+
+    focusBtn.addEventListener('click', () => {
+      stopTimer();
+      mode = 'focus';
+      totalSeconds = focusDuration;
+      renderTimer();
+    });
+
+    breakBtn.addEventListener('click', () => {
+      stopTimer();
+      mode = 'break';
+      totalSeconds = breakDuration;
+      renderTimer();
+    });
+
+    renderTimer();
+  </script>
+</body>
+</html>
