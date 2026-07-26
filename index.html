@@ -24,8 +24,6 @@
       --accent: #64dec2;
       --accent-strong: #3fc6a7;
       --accent-soft: rgba(100, 222, 194, 0.13);
-      --glow-one: rgba(70, 132, 164, 0.18);
-      --glow-two: rgba(54, 151, 132, 0.10);
       --danger: #ff7d88;
       --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
       --radius: 22px;
@@ -87,19 +85,6 @@
       transition: min-height 180ms ease, border-radius 180ms ease;
     }
 
-    .widget::before {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      width: 280px;
-      height: 280px;
-      top: -170px;
-      right: -90px;
-      border-radius: 50%;
-      background: var(--accent-soft);
-      filter: blur(8px);
-      pointer-events: none;
-    }
 
     .widget.compact {
       min-height: 224px;
@@ -193,6 +178,11 @@
       display: none;
     }
 
+    .focus-session-switch {
+      justify-self: center;
+      margin-bottom: 10px;
+    }
+
     .icon-button {
       width: 38px;
       height: 38px;
@@ -284,11 +274,22 @@
       text-align: center;
     }
 
-    .task-editor {
+    .focus-task-section {
       width: min(88%, 440px);
-      margin-bottom: 8px;
+      margin-top: 13px;
       display: grid;
-      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .focus-task-section[hidden] {
+      display: none;
+    }
+
+    .task-editor {
+      width: 100%;
+      margin: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
       gap: 6px;
     }
@@ -324,6 +325,33 @@
       color: var(--muted);
       background: rgba(3, 8, 13, 0.32);
       cursor: pointer;
+    }
+
+    .history-open-button {
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--muted);
+      background: rgba(3, 8, 13, 0.24);
+      font-size: 11px;
+      font-weight: 750;
+      cursor: pointer;
+      transition:
+        color 160ms ease,
+        border-color 160ms ease,
+        background 160ms ease,
+        transform 160ms ease;
+    }
+
+    .history-open-button:hover {
+      color: var(--text);
+      border-color: var(--line-strong);
+      background: var(--accent-soft);
+    }
+
+    .history-open-button:active {
+      transform: translateY(1px);
     }
 
     .session-label {
@@ -826,6 +854,299 @@
       cursor: pointer;
     }
 
+    .danger-button:hover {
+      color: #ffd7da;
+      border-color: rgba(255, 125, 136, 0.42);
+      background: rgba(255, 125, 136, 0.11);
+    }
+
+    .danger-button.confirming {
+      color: #fff2f3;
+      border-color: rgba(255, 125, 136, 0.72);
+      background: rgba(255, 125, 136, 0.22);
+      box-shadow: 0 0 0 3px rgba(255, 125, 136, 0.08);
+    }
+
+
+    .wide-panel-button {
+      width: 100%;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--muted);
+      background: var(--panel-soft);
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .wide-panel-button:hover {
+      color: var(--text);
+      border-color: var(--line-strong);
+      background: var(--accent-soft);
+    }
+
+    .week-chart {
+      height: 116px;
+      padding: 9px 8px 7px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      align-items: end;
+      gap: 5px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-soft);
+    }
+
+    .chart-day {
+      min-width: 0;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 15px 1fr 14px;
+      align-items: end;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .chart-value {
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 7px;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .chart-track {
+      width: 100%;
+      height: 100%;
+      min-height: 52px;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 7px;
+      background: rgba(157, 184, 207, 0.055);
+    }
+
+    .chart-bar {
+      width: min(62%, 22px);
+      min-height: 3px;
+      border-radius: 7px 7px 3px 3px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+      transition: height 220ms ease;
+    }
+
+    .chart-label {
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 700;
+    }
+
+    .task-total-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .task-total-item {
+      padding: 8px 9px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-soft);
+    }
+
+    .task-total-main {
+      min-width: 0;
+    }
+
+    .task-total-name {
+      overflow: hidden;
+      color: var(--text);
+      font-size: 10px;
+      font-weight: 750;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .task-total-bar {
+      height: 3px;
+      margin-top: 5px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(157, 184, 207, 0.10);
+    }
+
+    .task-total-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+
+    .task-total-time {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .shortcut-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .shortcut-row {
+      min-height: 35px;
+      padding: 7px 9px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-soft);
+    }
+
+    .shortcut-keys {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .keycap {
+      min-width: 26px;
+      min-height: 22px;
+      padding: 0 6px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-bottom-width: 2px;
+      border-radius: 6px;
+      color: var(--text);
+      background: rgba(157, 184, 207, 0.08);
+      font-family: "Space Grotesk", monospace;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .shortcut-copy {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 650;
+    }
+
+    .management-grid {
+      display: grid;
+      gap: 7px;
+    }
+
+    .management-button {
+      min-height: 39px;
+      padding: 0 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--text);
+      background: var(--panel-soft);
+      font-size: 10px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+    }
+
+    .management-button span {
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 650;
+    }
+
+    .management-button:hover {
+      border-color: var(--line-strong);
+      background: var(--accent-soft);
+    }
+
+    .management-button.danger {
+      color: var(--danger);
+      border-color: rgba(255, 125, 136, 0.22);
+      background: rgba(255, 125, 136, 0.05);
+    }
+
+    .management-button.confirming {
+      color: #fff2f3;
+      border-color: rgba(255, 125, 136, 0.70);
+      background: rgba(255, 125, 136, 0.18);
+    }
+
+    .session-end-grid {
+      display: grid;
+      gap: 7px;
+    }
+
+    .session-end-button {
+      min-height: 43px;
+      padding: 8px 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      color: var(--text);
+      background: var(--panel-soft);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .session-end-button:hover {
+      border-color: var(--line-strong);
+      background: var(--accent-soft);
+    }
+
+    .session-end-button strong {
+      display: block;
+      font-size: 10px;
+    }
+
+    .session-end-button small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 8px;
+    }
+
+    .session-end-button em {
+      color: var(--muted);
+      font-size: 15px;
+      font-style: normal;
+    }
+
+    .history-item.status-interrupted .history-dot {
+      background: #f0b95c;
+      box-shadow: 0 0 0 4px rgba(240, 185, 92, 0.12);
+    }
+
+    .history-item.status-postponed .history-dot {
+      background: #6cb8ff;
+      box-shadow: 0 0 0 4px rgba(108, 184, 255, 0.12);
+    }
+
+    .history-item.status-cancelled .history-dot {
+      background: var(--danger);
+      box-shadow: 0 0 0 4px rgba(255, 125, 136, 0.10);
+    }
+
+    .history-item.status-saved .history-dot {
+      background: var(--muted);
+      box-shadow: 0 0 0 4px rgba(137, 152, 166, 0.10);
+    }
+
     .toast {
       position: absolute;
       z-index: 30;
@@ -922,6 +1243,189 @@
       }
     }
 
+
+    /* Notion dashboard: kısa embed yüksekliğinde otomatik ultra-kompakt görünüm */
+    @media (max-height: 190px) {
+      html,
+      body {
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+        background: #1a1a1b;
+      }
+
+      .shell {
+        height: 100svh;
+        min-height: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .widget,
+      .widget.compact {
+        height: 100svh;
+        min-height: 0;
+        border-radius: 14px;
+        box-shadow: none;
+      }
+
+
+      .topbar {
+        min-height: 42px;
+        height: 42px;
+        padding: 5px 8px;
+        gap: 6px;
+      }
+
+      .top-actions {
+        gap: 5px;
+      }
+
+      .segmented {
+        padding: 2px;
+        border-radius: 9px;
+      }
+
+      .segmented button {
+        min-height: 27px;
+        padding: 0 9px;
+        border-radius: 7px;
+        font-size: 10px;
+      }
+
+      .icon-button {
+        width: 31px;
+        height: 31px;
+        flex-basis: 31px;
+        border-radius: 9px;
+      }
+
+      .icon-button svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .stage,
+      .widget.compact .stage {
+        height: calc(100svh - 43px);
+        min-height: 0;
+        padding: 5px 10px 7px;
+      }
+
+      .clock-time,
+      .widget.compact .clock-time {
+        font-size: clamp(34px, 8vw, 47px);
+        line-height: 0.94;
+        letter-spacing: 0.045em;
+      }
+
+      .clock-date,
+      .widget.compact .clock-date {
+        margin-top: 6px;
+        font-size: 11px;
+      }
+
+      .focus-wrap {
+        width: min(100%, 520px);
+      }
+
+      .focus-session-switch {
+        margin-bottom: 4px;
+      }
+
+      .focus-session-switch button {
+        min-height: 24px;
+        padding: 0 8px;
+        font-size: 9px;
+      }
+
+      .session-label {
+        margin-bottom: 1px;
+        font-size: 8px;
+        letter-spacing: 0.18em;
+      }
+
+      .timer-display,
+      .widget.compact .timer-display {
+        font-size: clamp(35px, 8vw, 47px);
+        line-height: 0.94;
+      }
+
+      .focus-task-section,
+      .focus-meta,
+      .widget.compact .focus-task-section,
+      .widget.compact .focus-meta {
+        display: none;
+      }
+
+      .progress,
+      .widget.compact .progress {
+        width: min(70%, 280px);
+        height: 2px;
+        margin: 5px 0 6px;
+      }
+
+      .controls {
+        gap: 5px;
+      }
+
+      .action-button {
+        min-width: 72px;
+        min-height: 28px;
+        padding: 0 10px;
+        border-radius: 8px;
+        font-size: 10px;
+      }
+
+      .panel {
+        top: 43px;
+        right: 5px;
+        width: calc(100% - 10px);
+        max-height: calc(100svh - 48px);
+        padding: 10px;
+        border-radius: 12px;
+      }
+
+      .panel-header {
+        margin-bottom: 8px;
+      }
+
+      .panel-title {
+        font-size: 12px;
+      }
+
+      .panel-subtitle {
+        font-size: 9px;
+      }
+
+      .setting-group {
+        gap: 7px;
+      }
+
+      .setting-row {
+        gap: 8px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 5px;
+      }
+
+      .stat-card {
+        padding: 7px 5px;
+      }
+
+      .history-list {
+        max-height: 78px;
+      }
+
+      .toast {
+        bottom: 5px;
+        padding: 6px 9px;
+        font-size: 9px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -938,18 +1442,13 @@
   <main class="shell">
     <section id="widget" class="widget" aria-label="Saat ve odak zamanlayıcısı">
       <header class="topbar">
-        <nav class="segmented" aria-label="Görünüm seçimi">
+        <nav class="segmented" aria-label="Saat veya zamanlayıcı görünümü">
           <button id="showClockBtn" class="active" type="button" aria-pressed="true">Saat</button>
-          <button id="showFocusBtn" type="button" aria-pressed="false">Odak</button>
+          <button id="showFocusBtn" type="button" aria-pressed="false">Zamanlayıcı</button>
         </nav>
 
         <div class="top-actions">
-          <div id="sessionSwitch" class="segmented session-switch" aria-label="Oturum seçimi" hidden>
-            <button id="focusModeBtn" class="active" type="button" aria-pressed="true">Odak</button>
-            <button id="breakModeBtn" type="button" aria-pressed="false">Mola</button>
-          </div>
-
-          <button id="statsBtn" class="icon-button" type="button" aria-label="İstatistikleri aç" aria-expanded="false">
+          <button id="statsBtn" class="icon-button" type="button" aria-label="Odak geçmişini aç" aria-expanded="false">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M5 19V11M12 19V5M19 19v-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
             </svg>
@@ -959,6 +1458,14 @@
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
               <path d="M8 5 5 8l3 3M16 13l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <button id="helpBtn" class="icon-button" type="button" aria-label="Klavye kısayollarını aç" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M9.7 9.2a2.45 2.45 0 0 1 4.76.82c0 1.65-1.55 2.08-2.24 2.82-.36.39-.42.71-.42 1.16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M12 17.25h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
             </svg>
           </button>
 
@@ -981,9 +1488,9 @@
 
         <section id="focusView" class="view" aria-live="polite">
           <div class="focus-wrap">
-            <div class="task-editor">
-              <input id="taskInput" type="text" maxlength="100" autocomplete="off" placeholder="Şu an neye odaklanıyorsun?">
-              <button id="clearTaskBtn" class="task-clear" type="button" aria-label="Görev adını temizle">×</button>
+            <div id="sessionSwitch" class="segmented session-switch focus-session-switch" aria-label="Oturum seçimi">
+              <button id="focusModeBtn" class="active" type="button" aria-pressed="true">Odak</button>
+              <button id="breakModeBtn" type="button" aria-pressed="false">Mola</button>
             </div>
 
             <div id="sessionLabel" class="session-label">ODAK</div>
@@ -999,6 +1506,25 @@
             </div>
 
             <div id="focusMeta" class="focus-meta">Bugün 0 odak • 0 dk</div>
+
+            <div id="focusTaskSection" class="focus-task-section">
+              <div class="task-editor">
+                <input
+                  id="taskInput"
+                  type="text"
+                  maxlength="100"
+                  autocomplete="off"
+                  list="focusHistoryOptions"
+                  placeholder="Şu an neye odaklanıyorsun?"
+                >
+                <datalist id="focusHistoryOptions"></datalist>
+                <button id="clearTaskBtn" class="task-clear" type="button" aria-label="Görev adını temizle">×</button>
+              </div>
+
+              <button id="historyBtn" class="history-open-button" type="button">
+                Odak Geçmişi
+              </button>
+            </div>
           </div>
         </section>
       </div>
@@ -1163,14 +1689,12 @@
             <input id="radiusRange" class="range-control" type="range" min="12" max="30" value="22" aria-label="Köşe yuvarlaklığı">
           </div>
 
-          <div class="setting-row">
-            <div class="setting-copy">
-              <strong>Arka plan ışığı</strong>
-              <span><span id="glowValue">60</span>%</span>
-            </div>
-            <input id="glowRange" class="range-control" type="range" min="0" max="100" value="60" aria-label="Arka plan ışığı">
-          </div>
         </div>
+
+        <div class="section-label">Veri</div>
+        <button id="openDataPanelBtn" class="wide-panel-button" type="button">
+          Veri Yönetimi
+        </button>
 
         <div class="settings-actions">
           <button id="saveSettingsBtn" class="save-button" type="button">Kaydet</button>
@@ -1178,11 +1702,11 @@
         </div>
       </aside>
 
-      <aside id="statsPanel" class="panel" aria-label="İstatistikler ve geçmiş" hidden>
+      <aside id="statsPanel" class="panel" aria-label="Odak geçmişi" hidden>
         <div class="panel-header">
           <div>
-            <div class="panel-title">İstatistikler</div>
-            <div class="panel-subtitle">Odak oturumlarının özeti.</div>
+            <div class="panel-title">Odak Geçmişi</div>
+            <div class="panel-subtitle">Son 5 günde tamamlanan odaklar.</div>
           </div>
           <button class="close-button" type="button" data-close-panel aria-label="İstatistikleri kapat">×</button>
         </div>
@@ -1206,11 +1730,105 @@
           </div>
         </div>
 
-        <div class="section-label">Son oturumlar</div>
+        <div class="section-label">Son 7 gün</div>
+        <div id="weekChart" class="week-chart" aria-label="Son yedi gün odak grafiği"></div>
+
+        <div class="section-label">Görev bazlı toplam</div>
+        <div id="taskTotalsList" class="task-total-list"></div>
+
+        <div class="section-label">Son 5 gün</div>
         <div id="historyList" class="history-list"></div>
 
         <div class="history-actions">
           <button id="clearHistoryBtn" class="danger-button" type="button">Geçmişi temizle</button>
+        </div>
+      </aside>
+
+      <aside id="sessionEndPanel" class="panel" aria-label="Odak oturumunu kapat" hidden>
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Oturumu Kapat</div>
+            <div class="panel-subtitle">Yarıda kalan odağın durumunu seç.</div>
+          </div>
+          <button class="close-button" type="button" data-close-session-panel aria-label="Oturum kapatma ekranını kapat">×</button>
+        </div>
+
+        <div class="session-end-grid">
+          <button class="session-end-button" type="button" data-session-status="interrupted">
+            <span>
+              <strong>Bölündü</strong>
+              <small>Dış bir nedenle çalışma kesildi.</small>
+            </span>
+            <em>⌁</em>
+          </button>
+          <button class="session-end-button" type="button" data-session-status="postponed">
+            <span>
+              <strong>Ertelendi</strong>
+              <small>Bu göreve daha sonra devam edilecek.</small>
+            </span>
+            <em>→</em>
+          </button>
+          <button class="session-end-button" type="button" data-session-status="cancelled">
+            <span>
+              <strong>İptal edildi</strong>
+              <small>Bu odak oturumu devam etmeyecek.</small>
+            </span>
+            <em>×</em>
+          </button>
+          <button id="continueSessionBtn" class="wide-panel-button" type="button">
+            Odağa geri dön
+          </button>
+        </div>
+      </aside>
+
+      <aside id="dataPanel" class="panel" aria-label="Veri yönetimi" hidden>
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Veri Yönetimi</div>
+            <div class="panel-subtitle">Geçmiş, istatistik, ayar ve tüm veriler.</div>
+          </div>
+          <button class="close-button" type="button" data-close-panel aria-label="Veri yönetimini kapat">×</button>
+        </div>
+
+        <div class="management-grid">
+          <button class="management-button danger" type="button" data-data-action="history">
+            Odak geçmişini temizle
+            <span>5 günlük kayıtlar</span>
+          </button>
+          <button class="management-button danger" type="button" data-data-action="stats">
+            İstatistikleri sıfırla
+            <span>Grafik ve toplamlar</span>
+          </button>
+          <button class="management-button" type="button" data-data-action="settings">
+            Ayarları sıfırla
+            <span>Süre ve görünüm</span>
+          </button>
+          <button class="management-button danger" type="button" data-data-action="all">
+            Bütün verileri sil
+            <span>Geri alınamaz</span>
+          </button>
+        </div>
+      </aside>
+
+      <aside id="shortcutsPanel" class="panel" aria-label="Klavye kısayolları" hidden>
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Klavye Kısayolları</div>
+            <div class="panel-subtitle">Giriş alanında yazarken devre dışıdır.</div>
+          </div>
+          <button class="close-button" type="button" data-close-panel aria-label="Kısayolları kapat">×</button>
+        </div>
+
+        <div class="shortcut-list">
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">Space</kbd></span><span class="shortcut-copy">Başlat / duraklat</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">R</kbd></span><span class="shortcut-copy">Oturumu sıfırla veya kapat</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">S</kbd></span><span class="shortcut-copy">Saat görünümü</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">O</kbd></span><span class="shortcut-copy">Zamanlayıcı görünümü</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">F</kbd></span><span class="shortcut-copy">Odak moduna geç</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">M</kbd></span><span class="shortcut-copy">Mola moduna geç</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">H</kbd></span><span class="shortcut-copy">Odak geçmişini aç</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">?</kbd></span><span class="shortcut-copy">Bu yardım ekranını aç</span></div>
+          <div class="shortcut-row"><span class="shortcut-keys"><kbd class="keycap">Esc</kbd></span><span class="shortcut-copy">Açık paneli kapat</span></div>
         </div>
       </aside>
 
@@ -1225,6 +1843,9 @@
       const SETTINGS_KEY = "notion-focus-settings-v5";
       const STATE_KEY = "notion-focus-state-v5";
       const HISTORY_KEY = "notion-focus-history-v5";
+      const STATS_KEY = "notion-focus-stats-v6";
+      const HISTORY_RETENTION_MS = 5 * 24 * 60 * 60 * 1000;
+      const STATS_RETENTION_MS = 365 * 24 * 60 * 60 * 1000;
 
       const defaultSettings = {
         focusMinutes: 25,
@@ -1240,7 +1861,6 @@
         theme: "mint",
         showSeconds: true,
         radius: 22,
-        glow: 60,
         layout: "wide"
       };
 
@@ -1248,44 +1868,32 @@
         mint: {
           accent: "#64dec2",
           strong: "#3fc6a7",
-          soft: "rgba(100, 222, 194, 0.13)",
-          glowOne: [70, 132, 164],
-          glowTwo: [54, 151, 132]
+          soft: "rgba(100, 222, 194, 0.13)"
         },
         blue: {
           accent: "#6cb8ff",
           strong: "#438fdd",
-          soft: "rgba(108, 184, 255, 0.13)",
-          glowOne: [58, 104, 173],
-          glowTwo: [48, 112, 154]
+          soft: "rgba(108, 184, 255, 0.13)"
         },
         violet: {
           accent: "#ad8cff",
           strong: "#8766df",
-          soft: "rgba(173, 140, 255, 0.13)",
-          glowOne: [96, 69, 161],
-          glowTwo: [90, 56, 127]
+          soft: "rgba(173, 140, 255, 0.13)"
         },
         amber: {
           accent: "#f0b95c",
           strong: "#d29435",
-          soft: "rgba(240, 185, 92, 0.13)",
-          glowOne: [137, 93, 37],
-          glowTwo: [119, 79, 31]
+          soft: "rgba(240, 185, 92, 0.13)"
         },
         rose: {
           accent: "#ff88a9",
           strong: "#df5f84",
-          soft: "rgba(255, 136, 169, 0.13)",
-          glowOne: [144, 61, 91],
-          glowTwo: [117, 53, 78]
+          soft: "rgba(255, 136, 169, 0.13)"
         },
         mono: {
           accent: "#d2dbe1",
           strong: "#aebbc4",
-          soft: "rgba(210, 219, 225, 0.12)",
-          glowOne: [82, 95, 107],
-          glowTwo: [64, 76, 86]
+          soft: "rgba(210, 219, 225, 0.12)"
         }
       };
 
@@ -1300,13 +1908,20 @@
         breakModeBtn: document.getElementById("breakModeBtn"),
         statsBtn: document.getElementById("statsBtn"),
         layoutBtn: document.getElementById("layoutBtn"),
+        helpBtn: document.getElementById("helpBtn"),
         settingsBtn: document.getElementById("settingsBtn"),
         settingsPanel: document.getElementById("settingsPanel"),
         statsPanel: document.getElementById("statsPanel"),
+        dataPanel: document.getElementById("dataPanel"),
+        shortcutsPanel: document.getElementById("shortcutsPanel"),
+        sessionEndPanel: document.getElementById("sessionEndPanel"),
         clockTime: document.getElementById("clockTime"),
         clockDate: document.getElementById("clockDate"),
         taskInput: document.getElementById("taskInput"),
+        taskOptions: document.getElementById("focusHistoryOptions"),
+        focusTaskSection: document.getElementById("focusTaskSection"),
         clearTaskBtn: document.getElementById("clearTaskBtn"),
+        historyBtn: document.getElementById("historyBtn"),
         sessionLabel: document.getElementById("sessionLabel"),
         timerDisplay: document.getElementById("timerDisplay"),
         progressBar: document.getElementById("progressBar"),
@@ -1329,45 +1944,211 @@
         showSecondsInput: document.getElementById("showSecondsInput"),
         radiusRange: document.getElementById("radiusRange"),
         radiusValue: document.getElementById("radiusValue"),
-        glowRange: document.getElementById("glowRange"),
-        glowValue: document.getElementById("glowValue"),
         presetGrid: document.getElementById("presetGrid"),
         themeGrid: document.getElementById("themeGrid"),
         saveSettingsBtn: document.getElementById("saveSettingsBtn"),
         defaultsBtn: document.getElementById("defaultsBtn"),
+        openDataPanelBtn: document.getElementById("openDataPanelBtn"),
         todaySessionsStat: document.getElementById("todaySessionsStat"),
         todayMinutesStat: document.getElementById("todayMinutesStat"),
         weekMinutesStat: document.getElementById("weekMinutesStat"),
         streakStat: document.getElementById("streakStat"),
         historyList: document.getElementById("historyList"),
+        weekChart: document.getElementById("weekChart"),
+        taskTotalsList: document.getElementById("taskTotalsList"),
         clearHistoryBtn: document.getElementById("clearHistoryBtn"),
+        continueSessionBtn: document.getElementById("continueSessionBtn"),
         toast: document.getElementById("toast")
       };
 
       let settings = loadSettings();
       let history = loadHistory();
+      let statsData = loadStats();
       let state = loadState();
       let timerId = null;
       let toastTimer = null;
+      let clearHistoryConfirmUntil = 0;
+      let clearHistoryResetTimer = null;
+      let pendingDataAction = null;
+      let pendingDataActionUntil = 0;
+      let pendingDataResetTimer = null;
+      let resumeAfterSessionDecision = false;
 
       function loadSettings() {
         try {
           const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
-          return {
+          const normalized = {
             ...defaultSettings,
             ...(saved && typeof saved === "object" ? saved : {})
           };
+
+          delete normalized.glow;
+          return normalized;
         } catch {
           return { ...defaultSettings };
         }
       }
 
+      function historyTimestamp(item) {
+        return Number(
+          item?.completedAt ||
+          item?.startedAt ||
+          item?.createdAt ||
+          0
+        );
+      }
+
+      function pruneHistory(items) {
+        const cutoff = Date.now() - HISTORY_RETENTION_MS;
+
+        return (Array.isArray(items) ? items : [])
+          .filter(
+            (item) =>
+              item &&
+              Number.isFinite(historyTimestamp(item)) &&
+              historyTimestamp(item) >= cutoff
+          )
+          .sort((a, b) => historyTimestamp(b) - historyTimestamp(a))
+          .slice(0, 250);
+      }
+
       function loadHistory() {
         try {
           const saved = JSON.parse(localStorage.getItem(HISTORY_KEY));
-          return Array.isArray(saved) ? saved.slice(0, 250) : [];
+          const recent = pruneHistory(saved);
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(recent));
+          return recent;
         } catch {
           return [];
+        }
+      }
+
+      function makeDefaultStats(resetAt = 0) {
+        return {
+          version: 1,
+          resetAt,
+          daily: {},
+          recordedIds: []
+        };
+      }
+
+      function pruneStatsData(value) {
+        const normalized =
+          value && typeof value === "object"
+            ? {
+                ...makeDefaultStats(),
+                ...value,
+                daily:
+                  value.daily && typeof value.daily === "object"
+                    ? value.daily
+                    : {},
+                recordedIds: Array.isArray(value.recordedIds)
+                  ? value.recordedIds
+                  : []
+              }
+            : makeDefaultStats();
+
+        const cutoffKey = dateKeyInIstanbul(Date.now() - STATS_RETENTION_MS);
+
+        Object.keys(normalized.daily).forEach((key) => {
+          if (key < cutoffKey) {
+            delete normalized.daily[key];
+          }
+        });
+
+        normalized.recordedIds = normalized.recordedIds.slice(-1500);
+        return normalized;
+      }
+
+      function loadStats() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STATS_KEY));
+          const normalized = pruneStatsData(saved);
+          localStorage.setItem(STATS_KEY, JSON.stringify(normalized));
+          return normalized;
+        } catch {
+          return makeDefaultStats();
+        }
+      }
+
+      function saveStats() {
+        statsData = pruneStatsData(statsData);
+        localStorage.setItem(STATS_KEY, JSON.stringify(statsData));
+      }
+
+      function recordCompletedStats(record, options = {}) {
+        const { save = true } = options;
+
+        if (
+          !record ||
+          record.type !== "focus" ||
+          record.status !== "completed"
+        ) {
+          return false;
+        }
+
+        const completedAt = Number(record.completedAt || Date.now());
+
+        if (
+          statsData.resetAt &&
+          completedAt < Number(statsData.resetAt)
+        ) {
+          return false;
+        }
+
+        const recordId = String(
+          record.id ||
+          `${completedAt}-${record.task || "focus"}-${record.minutes || 0}`
+        );
+
+        if (statsData.recordedIds.includes(recordId)) {
+          return false;
+        }
+
+        const dateKey = dateKeyInIstanbul(completedAt);
+        const task = String(record.task || "Adsız odak").trim() || "Adsız odak";
+        const minutes = Math.max(1, Number(record.minutes) || 1);
+        const day = statsData.daily[dateKey] || {
+          sessions: 0,
+          minutes: 0,
+          tasks: {}
+        };
+
+        day.sessions += 1;
+        day.minutes += minutes;
+        day.tasks[task] = (Number(day.tasks[task]) || 0) + minutes;
+
+        statsData.daily[dateKey] = day;
+        statsData.recordedIds.push(recordId);
+
+        if (save) {
+          saveStats();
+        }
+
+        return true;
+      }
+
+      function backfillStatsFromHistory() {
+        let changed = false;
+
+        history
+          .filter(
+            (item) =>
+              item.type === "focus" &&
+              (!item.status || item.status === "completed")
+          )
+          .forEach((item) => {
+            changed = recordCompletedStats(
+              {
+                ...item,
+                status: "completed"
+              },
+              { save: false }
+            ) || changed;
+          });
+
+        if (changed) {
+          saveStats();
         }
       }
 
@@ -1381,6 +2162,8 @@
           remainingSeconds: duration,
           totalSessionSeconds: duration,
           task: "",
+          sessionTask: "",
+          activeHistoryId: null,
           cycleFocusCount: 0
         };
       }
@@ -1402,7 +2185,8 @@
       }
 
       function saveHistory() {
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 250)));
+        history = pruneHistory(history);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
       }
 
       function persistState() {
@@ -1413,19 +2197,12 @@
         return Math.min(max, Math.max(min, value));
       }
 
-      function rgba(rgb, alpha) {
-        return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
-      }
 
       function applyTheme() {
         const theme = themes[settings.theme] || themes.mint;
-        const glowScale = clamp(settings.glow, 0, 100) / 100;
-
         document.documentElement.style.setProperty("--accent", theme.accent);
         document.documentElement.style.setProperty("--accent-strong", theme.strong);
         document.documentElement.style.setProperty("--accent-soft", theme.soft);
-        document.documentElement.style.setProperty("--glow-one", rgba(theme.glowOne, 0.30 * glowScale));
-        document.documentElement.style.setProperty("--glow-two", rgba(theme.glowTwo, 0.18 * glowScale));
         document.documentElement.style.setProperty("--radius", `${settings.radius}px`);
 
         elements.widget.classList.toggle("compact", settings.layout === "compact");
@@ -1473,7 +2250,6 @@
         elements.showFocusBtn.classList.toggle("active", !clockActive);
         elements.showClockBtn.setAttribute("aria-pressed", String(clockActive));
         elements.showFocusBtn.setAttribute("aria-pressed", String(!clockActive));
-        elements.sessionSwitch.hidden = clockActive;
 
         persistState();
         renderTimer();
@@ -1486,8 +2262,16 @@
       }
 
       function setMode(nextMode) {
+        if (nextMode === state.mode) return;
+
         stopTimer(false);
+
+        if (state.mode === "focus" && state.activeHistoryId) {
+          finalizeIncompleteFocus("postponed");
+        }
+
         state.mode = nextMode;
+        state.sessionTask = "";
         state.remainingSeconds = getModeDurationSeconds(nextMode);
         state.totalSessionSeconds = state.remainingSeconds;
         persistState();
@@ -1508,6 +2292,7 @@
         const stats = calculateStats();
 
         elements.taskInput.value = state.task || "";
+        elements.focusTaskSection.hidden = !focusActive;
         elements.timerDisplay.textContent = formatDuration(state.remainingSeconds);
         elements.sessionLabel.textContent =
           state.mode === "focus"
@@ -1529,8 +2314,143 @@
           : " ";
       }
 
+      function createStartedFocusHistory() {
+        if (state.mode !== "focus" || state.activeHistoryId) return;
+
+        const startedAt = Date.now();
+        const id = `${startedAt}-${Math.random().toString(16).slice(2)}`;
+        const task = state.sessionTask || state.task.trim() || "Adsız odak";
+
+        history.unshift({
+          id,
+          type: "focus",
+          status: "saved",
+          task,
+          minutes: Math.max(1, Math.round(state.totalSessionSeconds / 60)),
+          startedAt,
+          completedAt: startedAt
+        });
+
+        state.activeHistoryId = id;
+        saveHistory();
+        persistState();
+        renderHistory();
+      }
+
+      function completeActiveFocusHistory(completedAt, completedMinutes) {
+        const task = state.sessionTask || state.task.trim() || "Adsız odak";
+        const index = history.findIndex(
+          (item) => item.id === state.activeHistoryId
+        );
+
+        const completedRecord = {
+          id:
+            state.activeHistoryId ||
+            `${completedAt}-${Math.random().toString(16).slice(2)}`,
+          type: "focus",
+          status: "completed",
+          task,
+          minutes: completedMinutes,
+          startedAt:
+            index >= 0
+              ? history[index].startedAt || completedAt
+              : completedAt - state.totalSessionSeconds * 1000,
+          completedAt
+        };
+
+        if (index >= 0) {
+          history[index] = {
+            ...history[index],
+            ...completedRecord
+          };
+        } else {
+          history.unshift(completedRecord);
+        }
+
+        state.activeHistoryId = null;
+        return completedRecord;
+      }
+
+      function finalizeIncompleteFocus(status) {
+        if (!state.activeHistoryId) return null;
+
+        stopTimer(false);
+
+        const endedAt = Date.now();
+        const index = history.findIndex(
+          (item) => item.id === state.activeHistoryId
+        );
+        const elapsedSeconds = Math.max(
+          0,
+          state.totalSessionSeconds - state.remainingSeconds
+        );
+        const elapsedMinutes =
+          elapsedSeconds > 0
+            ? Math.max(1, Math.round(elapsedSeconds / 60))
+            : 0;
+        const task =
+          state.sessionTask ||
+          state.task.trim() ||
+          (index >= 0 ? history[index].task : "") ||
+          "Adsız odak";
+
+        const record = {
+          id:
+            state.activeHistoryId ||
+            `${endedAt}-${Math.random().toString(16).slice(2)}`,
+          type: "focus",
+          status,
+          task,
+          minutes: elapsedMinutes,
+          plannedMinutes: Math.max(
+            1,
+            Math.round(state.totalSessionSeconds / 60)
+          ),
+          startedAt:
+            index >= 0
+              ? history[index].startedAt || endedAt
+              : endedAt - elapsedSeconds * 1000,
+          completedAt: endedAt
+        };
+
+        if (index >= 0) {
+          history[index] = {
+            ...history[index],
+            ...record
+          };
+        } else {
+          history.unshift(record);
+        }
+
+        state.activeHistoryId = null;
+        state.sessionTask = "";
+        saveHistory();
+        persistState();
+        updateStatsPanel();
+        return record;
+      }
+
+      function detachActiveFocusHistory() {
+        state.activeHistoryId = null;
+        state.sessionTask = "";
+      }
+
       function startTimer() {
         if (state.isRunning) return;
+
+        if (
+          state.mode === "focus" &&
+          (
+            state.remainingSeconds === state.totalSessionSeconds ||
+            !state.sessionTask
+          )
+        ) {
+          state.sessionTask = state.task.trim() || "Adsız odak";
+        }
+
+        if (state.mode === "focus") {
+          createStartedFocusHistory();
+        }
 
         state.isRunning = true;
         state.endAt = Date.now() + state.remainingSeconds * 1000;
@@ -1560,12 +2480,25 @@
         if (render) renderTimer();
       }
 
-      function resetTimer() {
+      function resetTimerDirect() {
         stopTimer(false);
+        state.activeHistoryId = null;
+        state.sessionTask = "";
         state.remainingSeconds = getModeDurationSeconds();
         state.totalSessionSeconds = state.remainingSeconds;
         persistState();
         renderTimer();
+      }
+
+      function requestResetTimer() {
+        if (state.mode === "focus" && state.activeHistoryId) {
+          resumeAfterSessionDecision = state.isRunning;
+          stopTimer(false);
+          openPanel("sessionEnd");
+          return;
+        }
+
+        resetTimerDirect();
       }
 
       function tick() {
@@ -1596,24 +2529,38 @@
 
         stopTimer(false);
 
-        history.unshift({
-          id: `${completedAt}-${Math.random().toString(16).slice(2)}`,
-          type: completedMode,
-          task:
-            completedMode === "focus"
-              ? (state.task.trim() || "Adsız odak")
-              : completedMode === "longBreak"
+        let completedFocusRecord = null;
+
+        if (completedMode === "focus") {
+          completedFocusRecord = completeActiveFocusHistory(
+            completedAt,
+            completedMinutes
+          );
+        } else {
+          history.unshift({
+            id: `${completedAt}-${Math.random().toString(16).slice(2)}`,
+            type: completedMode,
+            status: "completed",
+            task:
+              completedMode === "longBreak"
                 ? "Uzun mola"
                 : "Kısa mola",
-          minutes: completedMinutes,
-          completedAt
-        });
+            minutes: completedMinutes,
+            startedAt: completedAt - state.totalSessionSeconds * 1000,
+            completedAt
+          });
+        }
 
-        history = history.slice(0, 250);
         saveHistory();
+
+        if (completedFocusRecord) {
+          recordCompletedStats(completedFocusRecord);
+        }
 
         if (completedMode === "focus") {
           state.cycleFocusCount += 1;
+          state.task = "";
+          elements.taskInput.value = "";
         }
 
         if (settings.sound && !restored) {
@@ -1634,6 +2581,8 @@
         state.totalSessionSeconds = state.remainingSeconds;
         state.isRunning = false;
         state.endAt = null;
+        state.sessionTask = "";
+        state.activeHistoryId = null;
 
         if (completedMode === "longBreak") {
           state.cycleFocusCount = 0;
@@ -1792,7 +2741,7 @@
 
         const body =
           completedMode === "focus"
-            ? `${state.task.trim() || "Odak oturumu"} tamamlandı.`
+            ? `${state.sessionTask || state.task.trim() || "Odak oturumu"} tamamlandı.`
             : "Sıradaki oturuma geçebilirsin.";
 
         try {
@@ -1808,13 +2757,25 @@
       function openPanel(panelName) {
         const settingsOpen = panelName === "settings";
         const statsOpen = panelName === "stats";
+        const dataOpen = panelName === "data";
+        const shortcutsOpen = panelName === "shortcuts";
+        const sessionEndOpen = panelName === "sessionEnd";
 
         elements.settingsPanel.hidden = !settingsOpen;
         elements.statsPanel.hidden = !statsOpen;
+        elements.dataPanel.hidden = !dataOpen;
+        elements.shortcutsPanel.hidden = !shortcutsOpen;
+        elements.sessionEndPanel.hidden = !sessionEndOpen;
+
         elements.settingsBtn.classList.toggle("active", settingsOpen);
         elements.statsBtn.classList.toggle("active", statsOpen);
+        elements.historyBtn.classList.toggle("active", statsOpen);
+        elements.helpBtn.classList.toggle("active", shortcutsOpen);
+
         elements.settingsBtn.setAttribute("aria-expanded", String(settingsOpen));
         elements.statsBtn.setAttribute("aria-expanded", String(statsOpen));
+        elements.historyBtn.setAttribute("aria-expanded", String(statsOpen));
+        elements.helpBtn.setAttribute("aria-expanded", String(shortcutsOpen));
 
         if (settingsOpen) {
           syncSettingsInputs();
@@ -1822,6 +2783,10 @@
 
         if (statsOpen) {
           updateStatsPanel();
+        }
+
+        if (!dataOpen) {
+          resetDataActionConfirmation();
         }
       }
 
@@ -1844,8 +2809,6 @@
         elements.showSecondsInput.checked = settings.showSeconds;
         elements.radiusRange.value = String(settings.radius);
         elements.radiusValue.textContent = String(settings.radius);
-        elements.glowRange.value = String(settings.glow);
-        elements.glowValue.textContent = String(settings.glow);
 
         updateNotificationStatus();
 
@@ -1872,8 +2835,7 @@
           soundType: elements.soundType.value,
           volume: clamp(parseInteger(elements.volumeRange.value, 55), 0, 100),
           showSeconds: elements.showSecondsInput.checked,
-          radius: clamp(parseInteger(elements.radiusRange.value, 22), 12, 30),
-          glow: clamp(parseInteger(elements.glowRange.value, 60), 0, 100)
+          radius: clamp(parseInteger(elements.radiusRange.value, 22), 12, 30)
         };
 
         if (
@@ -1976,20 +2938,25 @@
       }
 
       function calculateStats() {
-        const focusHistory = history.filter((item) => item.type === "focus");
         const todayKey = dateKeyInIstanbul();
         const startOfWeek = weekStartKey();
+        const today = statsData.daily[todayKey] || {
+          sessions: 0,
+          minutes: 0,
+          tasks: {}
+        };
 
-        const todayItems = focusHistory.filter(
-          (item) => dateKeyInIstanbul(item.completedAt) === todayKey
-        );
-
-        const weekItems = focusHistory.filter(
-          (item) => dateKeyInIstanbul(item.completedAt) >= startOfWeek
-        );
+        const weekMinutes = Object.entries(statsData.daily)
+          .filter(([key]) => key >= startOfWeek && key <= todayKey)
+          .reduce(
+            (sum, [, day]) => sum + (Number(day.minutes) || 0),
+            0
+          );
 
         const uniqueDays = new Set(
-          focusHistory.map((item) => dateKeyInIstanbul(item.completedAt))
+          Object.entries(statsData.daily)
+            .filter(([, day]) => Number(day.sessions) > 0)
+            .map(([key]) => key)
         );
 
         let streak = 0;
@@ -2001,11 +2968,102 @@
         }
 
         return {
-          todaySessions: todayItems.length,
-          todayMinutes: todayItems.reduce((sum, item) => sum + item.minutes, 0),
-          weekMinutes: weekItems.reduce((sum, item) => sum + item.minutes, 0),
+          todaySessions: Number(today.sessions) || 0,
+          todayMinutes: Number(today.minutes) || 0,
+          weekMinutes,
           streak
         };
+      }
+
+      function lastSevenDayKeys() {
+        const todayKey = dateKeyInIstanbul();
+        const cursor = new Date(`${todayKey}T00:00:00Z`);
+        const keys = [];
+
+        for (let index = 6; index >= 0; index -= 1) {
+          const date = new Date(cursor);
+          date.setUTCDate(date.getUTCDate() - index);
+          keys.push(date.toISOString().slice(0, 10));
+        }
+
+        return keys;
+      }
+
+      function renderWeekChart() {
+        const keys = lastSevenDayKeys();
+        const values = keys.map(
+          (key) => Number(statsData.daily[key]?.minutes) || 0
+        );
+        const maxValue = Math.max(1, ...values);
+
+        elements.weekChart.innerHTML = keys
+          .map((key, index) => {
+            const value = values[index];
+            const height = value > 0
+              ? Math.max(6, Math.round((value / maxValue) * 100))
+              : 3;
+            const date = new Date(`${key}T00:00:00Z`);
+            const label = new Intl.DateTimeFormat("tr-TR", {
+              weekday: "short",
+              timeZone: "UTC"
+            })
+              .format(date)
+              .replace(".", "");
+
+            return `
+              <div class="chart-day" title="${key}: ${formatMinutes(value)}">
+                <div class="chart-value">${value || ""}</div>
+                <div class="chart-track">
+                  <div class="chart-bar" style="height:${height}%"></div>
+                </div>
+                <div class="chart-label">${escapeHtml(label)}</div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function calculateTaskTotals() {
+        const totals = {};
+
+        Object.values(statsData.daily).forEach((day) => {
+          Object.entries(day.tasks || {}).forEach(([task, minutes]) => {
+            totals[task] = (totals[task] || 0) + (Number(minutes) || 0);
+          });
+        });
+
+        return Object.entries(totals)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10);
+      }
+
+      function renderTaskTotals() {
+        const totals = calculateTaskTotals();
+
+        if (!totals.length) {
+          elements.taskTotalsList.innerHTML =
+            '<div class="history-empty">Tamamlanmış görev süresi yok.</div>';
+          return;
+        }
+
+        const maxMinutes = Math.max(1, ...totals.map(([, minutes]) => minutes));
+
+        elements.taskTotalsList.innerHTML = totals
+          .map(([task, minutes]) => `
+            <div class="task-total-item">
+              <div class="task-total-main">
+                <div class="task-total-name">${escapeHtml(task)}</div>
+                <div class="task-total-bar">
+                  <div class="task-total-fill" style="width:${Math.max(
+                    4,
+                    Math.round((minutes / maxMinutes) * 100)
+                  )}%"></div>
+                </div>
+              </div>
+              <div class="task-total-time">${formatMinutes(minutes)}</div>
+            </div>
+          `)
+          .join("");
       }
 
       function formatMinutes(minutes) {
@@ -2023,22 +3081,45 @@
         elements.weekMinutesStat.textContent = formatMinutes(stats.weekMinutes);
         elements.streakStat.textContent = `${stats.streak} gün`;
 
+        renderWeekChart();
+        renderTaskTotals();
         renderHistory();
         renderTimer();
       }
 
+      function renderTaskOptions() {
+        const tasks = [
+          ...new Set(
+            history
+              .filter((item) => item.type === "focus")
+              .map((item) => String(item.task || "").trim())
+              .filter((task) => task && task !== "Adsız odak")
+          )
+        ].slice(0, 30);
+
+        elements.taskOptions.innerHTML = tasks
+          .map((task) => `<option value="${escapeHtml(task)}"></option>`)
+          .join("");
+      }
+
       function renderHistory() {
-        const recent = history.slice(0, 20);
+        history = pruneHistory(history);
+        const recent = history
+          .filter((item) => item.type === "focus")
+          .slice(0, 50);
+
+        renderTaskOptions();
 
         if (!recent.length) {
           elements.historyList.innerHTML =
-            '<div class="history-empty">Henüz tamamlanmış oturum yok.</div>';
+            '<div class="history-empty">Son 5 günde tamamlanmış odak yok.</div>';
           return;
         }
 
         elements.historyList.innerHTML = recent
           .map((item) => {
-            const date = new Date(item.completedAt).toLocaleString("tr-TR", {
+            const recordTime = historyTimestamp(item);
+            const date = new Date(recordTime).toLocaleString("tr-TR", {
               timeZone: "Europe/Istanbul",
               day: "2-digit",
               month: "short",
@@ -2046,21 +3127,31 @@
               minute: "2-digit"
             });
 
-            const typeLabel =
-              item.type === "focus"
-                ? "Odak"
-                : item.type === "longBreak"
-                  ? "Uzun mola"
-                  : "Mola";
+            const status = item.status || "completed";
+            const statusLabels = {
+              completed: "Tamamlandı",
+              interrupted: "Bölündü",
+              postponed: "Ertelendi",
+              cancelled: "İptal edildi",
+              saved: "Devam ediyor"
+            };
+            const durationLabel =
+              status === "saved"
+                ? `${item.minutes} dk plan`
+                : item.minutes > 0
+                  ? formatMinutes(item.minutes)
+                  : "<1 dk";
 
             return `
-              <div class="history-item">
+              <div class="history-item status-${escapeHtml(status)}">
                 <span class="history-dot"></span>
                 <div class="history-main">
                   <div class="history-task">${escapeHtml(item.task)}</div>
-                  <div class="history-date">${typeLabel} • ${date}</div>
+                  <div class="history-date">
+                    ${statusLabels[status] || "Kaydedildi"} • ${date}
+                  </div>
                 </div>
-                <div class="history-duration">${item.minutes} dk</div>
+                <div class="history-duration">${durationLabel}</div>
               </div>
             `;
           })
@@ -2107,11 +3198,25 @@
         state.isRunning ? stopTimer() : startTimer();
       });
 
-      elements.resetBtn.addEventListener("click", resetTimer);
+      elements.resetBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        requestResetTimer();
+      });
 
       elements.taskInput.addEventListener("input", () => {
         state.task = elements.taskInput.value;
         persistState();
+      });
+
+      elements.taskInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+
+        event.preventDefault();
+        elements.taskInput.blur();
+
+        if (!state.isRunning) {
+          startTimer();
+        }
       });
 
       elements.clearTaskBtn.addEventListener("click", () => {
@@ -2125,11 +3230,63 @@
         openPanel(elements.settingsPanel.hidden ? "settings" : null);
       });
 
+      elements.helpBtn.addEventListener("click", () => {
+        openPanel(elements.shortcutsPanel.hidden ? "shortcuts" : null);
+      });
+
+      elements.openDataPanelBtn.addEventListener("click", () => {
+        openPanel("data");
+      });
+
       elements.statsBtn.addEventListener("click", () => {
         openPanel(elements.statsPanel.hidden ? "stats" : null);
       });
 
+      elements.historyBtn.addEventListener("click", () => {
+        openPanel(elements.statsPanel.hidden ? "stats" : null);
+      });
+
       elements.layoutBtn.addEventListener("click", toggleLayout);
+
+      document.querySelectorAll("[data-session-status]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const status = button.dataset.sessionStatus;
+          finalizeIncompleteFocus(status);
+          resetTimerDirect();
+          resumeAfterSessionDecision = false;
+          closePanels();
+
+          const labels = {
+            interrupted: "Odak bölündü olarak kaydedildi.",
+            postponed: "Odak ertelendi olarak kaydedildi.",
+            cancelled: "Odak iptal edildi olarak kaydedildi."
+          };
+
+          showToast(labels[status] || "Oturum kaydedildi.");
+        });
+      });
+
+      elements.continueSessionBtn.addEventListener("click", () => {
+        const shouldResume = resumeAfterSessionDecision;
+        resumeAfterSessionDecision = false;
+        closePanels();
+
+        if (shouldResume) {
+          startTimer();
+        }
+      });
+
+      document.querySelectorAll("[data-close-session-panel]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const shouldResume = resumeAfterSessionDecision;
+          resumeAfterSessionDecision = false;
+          closePanels();
+
+          if (shouldResume) {
+            startTimer();
+          }
+        });
+      });
 
       document.querySelectorAll("[data-close-panel]").forEach((button) => {
         button.addEventListener("click", closePanels);
@@ -2175,9 +3332,6 @@
         );
       });
 
-      elements.glowRange.addEventListener("input", () => {
-        elements.glowValue.textContent = elements.glowRange.value;
-      });
 
       elements.requestNotificationBtn.addEventListener(
         "click",
@@ -2195,30 +3349,186 @@
         }
       });
 
-      elements.clearHistoryBtn.addEventListener("click", () => {
-        if (!history.length) return;
-
-        const confirmed = window.confirm(
-          "Oturum geçmişi ve istatistikler temizlensin mi?"
-        );
-
-        if (!confirmed) return;
-
+      function clearFocusHistory() {
         history = [];
-        state.cycleFocusCount = 0;
+        state.activeHistoryId = null;
+        localStorage.removeItem(HISTORY_KEY);
         saveHistory();
         persistState();
         updateStatsPanel();
-        showToast("Geçmiş temizlendi.");
+      }
+
+      function resetStatistics() {
+        statsData = makeDefaultStats(Date.now());
+        saveStats();
+        updateStatsPanel();
+      }
+
+      function resetSettingsOnly() {
+        settings = { ...defaultSettings };
+        saveSettings();
+        applyTheme();
+        syncSettingsInputs();
+        updateClock();
+
+        if (!state.isRunning) {
+          state.remainingSeconds = getModeDurationSeconds();
+          state.totalSessionSeconds = state.remainingSeconds;
+          persistState();
+        }
+
+        renderTimer();
+      }
+
+      function clearAllWidgetData() {
+        if (timerId !== null) {
+          window.clearInterval(timerId);
+          timerId = null;
+        }
+
+        localStorage.removeItem(SETTINGS_KEY);
+        localStorage.removeItem(STATE_KEY);
+        localStorage.removeItem(HISTORY_KEY);
+        localStorage.removeItem(STATS_KEY);
+
+        settings = { ...defaultSettings };
+        history = [];
+        statsData = makeDefaultStats(Date.now());
+        state = makeDefaultState();
+
+        saveSettings();
+        saveHistory();
+        saveStats();
+        persistState();
+
+        applyTheme();
+        syncSettingsInputs();
+        elements.taskInput.value = "";
+        setActiveView("clock");
+        updateStatsPanel();
+        renderTimer();
+      }
+
+      function resetDataActionConfirmation() {
+        pendingDataAction = null;
+        pendingDataActionUntil = 0;
+        window.clearTimeout(pendingDataResetTimer);
+
+        document.querySelectorAll("[data-data-action]").forEach((button) => {
+          button.classList.remove("confirming");
+          button.dataset.originalText &&
+            (button.firstChild.textContent = button.dataset.originalText);
+        });
+      }
+
+      function runDataAction(action) {
+        if (action === "history") {
+          clearFocusHistory();
+          showToast("Odak geçmişi temizlendi.");
+        } else if (action === "stats") {
+          resetStatistics();
+          showToast("İstatistikler sıfırlandı.");
+        } else if (action === "settings") {
+          resetSettingsOnly();
+          showToast("Ayarlar sıfırlandı.");
+        } else if (action === "all") {
+          clearAllWidgetData();
+          showToast("Bütün widget verileri silindi.");
+        }
+      }
+
+      document.querySelectorAll("[data-data-action]").forEach((button) => {
+        button.dataset.originalText =
+          button.firstChild.textContent.trim();
+
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const action = button.dataset.dataAction;
+
+          if (action === "settings") {
+            runDataAction(action);
+            return;
+          }
+
+          const now = Date.now();
+
+          if (
+            pendingDataAction !== action ||
+            now > pendingDataActionUntil
+          ) {
+            resetDataActionConfirmation();
+            pendingDataAction = action;
+            pendingDataActionUntil = now + 3500;
+            button.classList.add("confirming");
+            button.firstChild.textContent = "Tekrar tıkla: Onayla ";
+
+            pendingDataResetTimer = window.setTimeout(
+              resetDataActionConfirmation,
+              3500
+            );
+            showToast("İşlemi onaylamak için tekrar tıkla.");
+            return;
+          }
+
+          runDataAction(action);
+          resetDataActionConfirmation();
+        });
+      });
+
+      function resetClearHistoryButton() {
+        clearHistoryConfirmUntil = 0;
+        window.clearTimeout(clearHistoryResetTimer);
+        elements.clearHistoryBtn.textContent = "Geçmişi temizle";
+        elements.clearHistoryBtn.classList.remove("confirming");
+      }
+
+      elements.clearHistoryBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!history.length) {
+          resetClearHistoryButton();
+          showToast("Temizlenecek odak geçmişi yok.");
+          return;
+        }
+
+        const now = Date.now();
+
+        if (now > clearHistoryConfirmUntil) {
+          clearHistoryConfirmUntil = now + 3500;
+          elements.clearHistoryBtn.textContent = "Tekrar tıkla: Temizle";
+          elements.clearHistoryBtn.classList.add("confirming");
+          showToast("Silmek için düğmeye tekrar tıkla.");
+
+          window.clearTimeout(clearHistoryResetTimer);
+          clearHistoryResetTimer = window.setTimeout(
+            resetClearHistoryButton,
+            3500
+          );
+          return;
+        }
+
+        state.cycleFocusCount = 0;
+        clearFocusHistory();
+        resetClearHistoryButton();
+        showToast("Odak geçmişi temizlendi.");
       });
 
       document.addEventListener("click", (event) => {
         const clickedInsidePanel =
           elements.settingsPanel.contains(event.target) ||
-          elements.statsPanel.contains(event.target);
+          elements.statsPanel.contains(event.target) ||
+          elements.dataPanel.contains(event.target) ||
+          elements.shortcutsPanel.contains(event.target) ||
+          elements.sessionEndPanel.contains(event.target);
         const clickedPanelButton =
           elements.settingsBtn.contains(event.target) ||
-          elements.statsBtn.contains(event.target);
+          elements.statsBtn.contains(event.target) ||
+          elements.historyBtn.contains(event.target) ||
+          elements.helpBtn.contains(event.target) ||
+          elements.openDataPanelBtn.contains(event.target);
 
         if (!clickedInsidePanel && !clickedPanelButton) {
           closePanels();
@@ -2229,19 +3539,55 @@
         const tagName = document.activeElement?.tagName;
         const isTyping =
           tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT";
+        const key = event.key.toLowerCase();
 
         if (event.key === "Escape") {
           closePanels();
           return;
         }
 
-        if (isTyping || state.activeView !== "focus") return;
+        if (isTyping) return;
+
+        if (event.key === "?") {
+          event.preventDefault();
+          openPanel(elements.shortcutsPanel.hidden ? "shortcuts" : null);
+          return;
+        }
+
+        if (key === "s") {
+          setActiveView("clock");
+          return;
+        }
+
+        if (key === "o") {
+          setActiveView("focus");
+          return;
+        }
+
+        if (key === "h") {
+          openPanel(elements.statsPanel.hidden ? "stats" : null);
+          return;
+        }
+
+        if (key === "f") {
+          setActiveView("focus");
+          setMode("focus");
+          return;
+        }
+
+        if (key === "m") {
+          setActiveView("focus");
+          setMode("break");
+          return;
+        }
+
+        if (state.activeView !== "focus") return;
 
         if (event.code === "Space") {
           event.preventDefault();
           state.isRunning ? stopTimer() : startTimer();
-        } else if (event.key.toLowerCase() === "r") {
-          resetTimer();
+        } else if (key === "r") {
+          requestResetTimer();
         }
       });
 
@@ -2252,6 +3598,18 @@
       });
 
       window.addEventListener("beforeunload", persistState);
+
+      saveHistory();
+      backfillStatsFromHistory();
+      saveStats();
+
+      if (
+        state.activeHistoryId &&
+        !history.some((item) => item.id === state.activeHistoryId)
+      ) {
+        state.activeHistoryId = null;
+        persistState();
+      }
 
       applyTheme();
       syncSettingsInputs();
