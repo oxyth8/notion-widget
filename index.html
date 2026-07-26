@@ -3,256 +3,568 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title> </title>
+  <meta name="color-scheme" content="dark" />
+  <title></title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #111318;
-      color: #f5f5f5;
+    :root {
+      --bg: #121419;
+      --panel: #191c23;
+      --panel-2: #222630;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f4f4f5;
+      --muted: #a4a8b1;
+      --accent: #f3a533;
+      --accent-soft: rgba(243, 165, 51, 0.14);
     }
 
-    .wrap {
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input { font: inherit; }
+    button { border: 0; cursor: pointer; }
+
+    .app {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      padding: 14px;
-      min-height: 220px;
-      background: linear-gradient(90deg, #1a1d25 0%, #111318 100%);
+      gap: 10px;
+      padding: 10px;
+      min-height: 172px;
     }
 
     .card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
-      padding: 20px;
+      position: relative;
+      min-height: 152px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.025), transparent), var(--panel);
+      overflow: hidden;
+    }
+
+    .clock-card, .timer-card {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 190px;
+      text-align: center;
+    }
+
+    .label {
+      position: absolute;
+      top: 11px;
+      left: 13px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
     }
 
     .clock-time {
-      font-size: 64px;
-      font-weight: 700;
-      letter-spacing: 2px;
+      font-size: clamp(34px, 5vw, 47px);
+      font-weight: 760;
       line-height: 1;
-      margin-bottom: 14px;
+      letter-spacing: .03em;
+      font-variant-numeric: tabular-nums;
     }
 
     .clock-date {
-      font-size: 24px;
-      color: #d7d7d7;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
-    .timer-mode {
-      font-size: 18px;
-      font-weight: 700;
-      color: #f0a43a;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
+    .timer-head {
+      position: absolute;
+      top: 9px;
+      left: 11px;
+      right: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .mode-tabs {
+      display: inline-flex;
+      gap: 3px;
+      padding: 3px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: rgba(0,0,0,.12);
+    }
+
+    .mode-btn {
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .mode-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .icon-btn {
+      width: 29px;
+      height: 29px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .timer-display {
-      font-size: 56px;
-      font-weight: 700;
+      margin-top: 13px;
+      font-size: clamp(37px, 5vw, 49px);
+      font-weight: 760;
       line-height: 1;
-      margin-bottom: 18px;
+      font-variant-numeric: tabular-nums;
     }
 
-    .buttons {
+    .progress {
+      width: min(205px, 82%);
+      height: 4px;
+      margin: 11px 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+      transition: width .3s linear;
+    }
+
+    .controls {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 12px;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
-    button {
-      border: none;
-      border-radius: 10px;
-      padding: 10px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      background: #f0a43a;
-      color: #111318;
+    .control-btn {
+      min-width: 62px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 750;
     }
 
-    button.secondary {
-      background: #2d3340;
-      color: #f5f5f5;
+    .control-btn.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #17120a;
     }
 
-    button.ghost {
-      background: #1a1d25;
-      color: #f5f5f5;
-      border: 1px solid rgba(255,255,255,0.12);
+    .session-info {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 10px;
     }
 
-    .preset {
-      font-size: 14px;
-      color: #bdbdbd;
+    button { transition: transform .12s ease, filter .12s ease; }
+    button:hover { transform: translateY(-1px); filter: brightness(1.06); }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      background: rgba(0,0,0,.58);
+      backdrop-filter: blur(6px);
     }
 
-    @media (max-width: 900px) {
-      .wrap {
-        grid-template-columns: 1fr;
-      }
-      .clock-time, .timer-display {
-        font-size: 48px;
-      }
-      .clock-date {
-        font-size: 20px;
-      }
+    .backdrop.open { display: flex; }
+
+    .settings {
+      width: min(350px, 100%);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--panel);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4);
+      overflow: hidden;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .settings-title { font-size: 14px; font-weight: 760; }
+
+    .settings-body {
+      display: grid;
+      gap: 14px;
+      padding: 15px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .field { display: grid; gap: 6px; }
+    .field label, .toggle-row > span { color: var(--muted); font-size: 11px; font-weight: 650; }
+
+    .field input {
+      width: 100%;
+      padding: 8px 9px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      background: var(--panel-2);
+      color: var(--text);
+    }
+
+    .field input:focus { border-color: rgba(243,165,51,.7); }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 30px;
+    }
+
+    .switch { position: relative; width: 40px; height: 23px; flex: 0 0 auto; }
+    .switch input { position: absolute; opacity: 0; }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: #303540;
+    }
+
+    .slider::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .15s ease;
+    }
+
+    .switch input:checked + .slider { background: var(--accent); }
+    .switch input:checked + .slider::after { transform: translateX(17px); }
+
+    .hint { color: #7f8490; font-size: 9px; line-height: 1.5; }
+
+    .settings-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+      padding: 0 15px 15px;
+    }
+
+    .settings-footer button {
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .cancel-btn { border: 1px solid var(--border); background: var(--panel-2); color: var(--text); }
+    .save-btn { background: var(--accent); color: #17120a; }
+
+    @media (max-width: 700px) {
+      .app { grid-template-columns: 1fr; }
+      .card { min-height: 140px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
+  <main class="app">
+    <section class="card clock-card" aria-label="İstanbul saati">
+      <div class="label">Saat</div>
       <div id="clockTime" class="clock-time">00:00:00</div>
       <div id="clockDate" class="clock-date">00 Ay 0000 Gün</div>
-    </div>
+    </section>
 
-    <div class="card">
-      <div id="timerMode" class="timer-mode">FOCUS</div>
+    <section class="card timer-card" aria-label="Focus zamanlayıcı">
+      <div class="timer-head">
+        <div class="mode-tabs">
+          <button id="focusBtn" class="mode-btn active" type="button">Focus</button>
+          <button id="breakBtn" class="mode-btn" type="button">Mola</button>
+        </div>
+        <button id="settingsBtn" class="icon-btn" type="button" aria-label="Ayarları aç" title="Ayarlar">⚙</button>
+      </div>
+
       <div id="timerDisplay" class="timer-display">25:00</div>
+      <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
 
-      <div class="buttons">
-        <button id="startPauseBtn">Başlat</button>
-        <button id="resetBtn" class="secondary">Sıfırla</button>
+      <div class="controls">
+        <button id="startPauseBtn" class="control-btn primary" type="button">Başlat</button>
+        <button id="resetBtn" class="control-btn" type="button">Sıfırla</button>
+        <button id="skipBtn" class="control-btn" type="button">Atla</button>
       </div>
 
-      <div class="buttons">
-        <button id="focusBtn" class="ghost">Focus 25 dk</button>
-        <button id="breakBtn" class="ghost">Mola 5 dk</button>
+      <div class="session-info">Tamamlanan focus: <strong id="sessionCount">0</strong></div>
+    </section>
+  </main>
+
+  <div id="backdrop" class="backdrop" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <section class="settings">
+      <header class="settings-header">
+        <div id="settingsTitle" class="settings-title">Zamanlayıcı Ayarları</div>
+        <button id="closeBtn" class="icon-btn" type="button" aria-label="Kapat">✕</button>
+      </header>
+
+      <div class="settings-body">
+        <div class="field-grid">
+          <div class="field">
+            <label for="focusInput">Focus süresi (dk)</label>
+            <input id="focusInput" type="number" min="1" max="180" step="1" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label for="breakInput">Mola süresi (dk)</label>
+            <input id="breakInput" type="number" min="1" max="60" step="1" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <span>Süre bitince otomatik başlat</span>
+          <label class="switch">
+            <input id="autoStartInput" type="checkbox" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <span>Bildirim sesi</span>
+          <label class="switch">
+            <input id="soundInput" type="checkbox" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="hint">Kısayollar: Boşluk başlat/duraklat · R sıfırla · F focus · M mola · A ayarlar</div>
       </div>
 
-      <div class="preset">Varsayılan: Focus 25 dk • Mola 5 dk</div>
-    </div>
+      <footer class="settings-footer">
+        <button id="cancelBtn" class="cancel-btn" type="button">Vazgeç</button>
+        <button id="saveBtn" class="save-btn" type="button">Kaydet</button>
+      </footer>
+    </section>
   </div>
 
   <script>
-    // CLOCK - ISTANBUL
+    const SETTINGS_KEY = "notionFocusWidgetSettingsV3";
+    const SESSION_KEY = "notionFocusWidgetSessionsV3";
+    const defaults = { focusMinutes: 25, breakMinutes: 5, autoStart: false, sound: true };
+
+    const $ = (id) => document.getElementById(id);
+    const clockTime = $("clockTime");
+    const clockDate = $("clockDate");
+    const timerDisplay = $("timerDisplay");
+    const progressBar = $("progressBar");
+    const sessionCountEl = $("sessionCount");
+    const startPauseBtn = $("startPauseBtn");
+    const focusBtn = $("focusBtn");
+    const breakBtn = $("breakBtn");
+    const backdrop = $("backdrop");
+
+    let settings = loadSettings();
+    let mode = "focus";
+    let isRunning = false;
+    let timerInterval = null;
+    let deadline = null;
+    let remainingSeconds = settings.focusMinutes * 60;
+    let sessionCount = Number(localStorage.getItem(SESSION_KEY) || 0);
+
+    function loadSettings() {
+      try { return { ...defaults, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") }; }
+      catch { return { ...defaults }; }
+    }
+
     function updateClock() {
       const now = new Date();
-
-      const time = now.toLocaleTimeString('tr-TR', {
-        timeZone: 'Europe/Istanbul',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
+      clockTime.textContent = now.toLocaleTimeString("tr-TR", {
+        timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit", second: "2-digit"
       });
-
-      const date = now.toLocaleDateString('tr-TR', {
-        timeZone: 'Europe/Istanbul',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        weekday: 'long'
+      clockDate.textContent = now.toLocaleDateString("tr-TR", {
+        timeZone: "Europe/Istanbul", day: "numeric", month: "long", year: "numeric", weekday: "long"
       });
-
-      document.getElementById('clockTime').textContent = time;
-      document.getElementById('clockDate').textContent = date;
     }
+
+    function modeSeconds(target = mode) {
+      return (target === "focus" ? settings.focusMinutes : settings.breakMinutes) * 60;
+    }
+
+    function format(seconds) {
+      const safe = Math.max(0, Math.round(seconds));
+      return `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`;
+    }
+
+    function render() {
+      const total = modeSeconds();
+      const progress = total ? Math.max(0, Math.min(100, remainingSeconds / total * 100)) : 0;
+      timerDisplay.textContent = format(remainingSeconds);
+      progressBar.style.width = `${progress}%`;
+      startPauseBtn.textContent = isRunning ? "Duraklat" : "Başlat";
+      focusBtn.classList.toggle("active", mode === "focus");
+      breakBtn.classList.toggle("active", mode === "break");
+      sessionCountEl.textContent = sessionCount;
+      document.title = `${format(remainingSeconds)} · ${mode === "focus" ? "Focus" : "Mola"}`;
+    }
+
+    function stop() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      isRunning = false;
+      deadline = null;
+      render();
+    }
+
+    function start() {
+      if (isRunning) return;
+      isRunning = true;
+      deadline = Date.now() + remainingSeconds * 1000;
+      render();
+
+      timerInterval = setInterval(() => {
+        remainingSeconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+        render();
+        if (remainingSeconds <= 0) completeSession();
+      }, 250);
+    }
+
+    function switchMode(next, stopFirst = true) {
+      if (stopFirst) stop();
+      mode = next;
+      remainingSeconds = modeSeconds(next);
+      render();
+    }
+
+    function reset() {
+      stop();
+      remainingSeconds = modeSeconds();
+      render();
+    }
+
+    function skip() {
+      stop();
+      switchMode(mode === "focus" ? "break" : "focus", false);
+    }
+
+    function completeSession() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      isRunning = false;
+      deadline = null;
+
+      if (mode === "focus") {
+        sessionCount += 1;
+        localStorage.setItem(SESSION_KEY, sessionCount);
+      }
+
+      if (settings.sound) beep();
+      switchMode(mode === "focus" ? "break" : "focus", false);
+      if (settings.autoStart) start();
+    }
+
+    function beep() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(.001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(.18, ctx.currentTime + .02);
+        gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .45);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + .46);
+      } catch {}
+    }
+
+    function openSettings() {
+      $("focusInput").value = settings.focusMinutes;
+      $("breakInput").value = settings.breakMinutes;
+      $("autoStartInput").checked = settings.autoStart;
+      $("soundInput").checked = settings.sound;
+      backdrop.classList.add("open");
+      $("focusInput").focus();
+    }
+
+    function closeSettings() { backdrop.classList.remove("open"); }
+
+    function applySettings() {
+      settings = {
+        focusMinutes: Math.min(180, Math.max(1, Number($("focusInput").value) || 25)),
+        breakMinutes: Math.min(60, Math.max(1, Number($("breakInput").value) || 5)),
+        autoStart: $("autoStartInput").checked,
+        sound: $("soundInput").checked
+      };
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      stop();
+      remainingSeconds = modeSeconds();
+      closeSettings();
+      render();
+    }
+
+    startPauseBtn.addEventListener("click", () => isRunning ? stop() : start());
+    $("resetBtn").addEventListener("click", reset);
+    $("skipBtn").addEventListener("click", skip);
+    focusBtn.addEventListener("click", () => switchMode("focus"));
+    breakBtn.addEventListener("click", () => switchMode("break"));
+    $("settingsBtn").addEventListener("click", openSettings);
+    $("closeBtn").addEventListener("click", closeSettings);
+    $("cancelBtn").addEventListener("click", closeSettings);
+    $("saveBtn").addEventListener("click", applySettings);
+
+    backdrop.addEventListener("click", (event) => {
+      if (event.target === backdrop) closeSettings();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const typing = ["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName);
+      if (event.key === "Escape" && backdrop.classList.contains("open")) return closeSettings();
+      if (typing || backdrop.classList.contains("open")) return;
+      if (event.code === "Space") { event.preventDefault(); isRunning ? stop() : start(); }
+      else if (event.key.toLowerCase() === "r") reset();
+      else if (event.key.toLowerCase() === "f") switchMode("focus");
+      else if (event.key.toLowerCase() === "m") switchMode("break");
+      else if (event.key.toLowerCase() === "a") openSettings();
+    });
 
     setInterval(updateClock, 1000);
     updateClock();
-
-    // FOCUS TIMER
-    let isRunning = false;
-    let mode = 'focus';
-    let focusDuration = 25 * 60;
-    let breakDuration = 5 * 60;
-    let totalSeconds = focusDuration;
-    let timerInterval = null;
-
-    const timerDisplay = document.getElementById('timerDisplay');
-    const timerMode = document.getElementById('timerMode');
-    const startPauseBtn = document.getElementById('startPauseBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const focusBtn = document.getElementById('focusBtn');
-    const breakBtn = document.getElementById('breakBtn');
-
-    function formatTime(seconds) {
-      const m = String(Math.floor(seconds / 60)).padStart(2, '0');
-      const s = String(seconds % 60).padStart(2, '0');
-      return `${m}:${s}`;
-    }
-
-    function renderTimer() {
-      timerDisplay.textContent = formatTime(totalSeconds);
-      timerMode.textContent = mode === 'focus' ? 'FOCUS' : 'MOLA';
-      startPauseBtn.textContent = isRunning ? 'Duraklat' : 'Başlat';
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      isRunning = false;
-      renderTimer();
-    }
-
-    function startTimer() {
-      if (isRunning) return;
-      isRunning = true;
-      renderTimer();
-
-      timerInterval = setInterval(() => {
-        totalSeconds--;
-
-        if (totalSeconds <= 0) {
-          clearInterval(timerInterval);
-          isRunning = false;
-
-          if (mode === 'focus') {
-            mode = 'break';
-            totalSeconds = breakDuration;
-          } else {
-            mode = 'focus';
-            totalSeconds = focusDuration;
-          }
-
-          renderTimer();
-          return;
-        }
-
-        renderTimer();
-      }, 1000);
-    }
-
-    startPauseBtn.addEventListener('click', () => {
-      if (isRunning) {
-        stopTimer();
-      } else {
-        startTimer();
-      }
-    });
-
-    resetBtn.addEventListener('click', () => {
-      stopTimer();
-      totalSeconds = mode === 'focus' ? focusDuration : breakDuration;
-      renderTimer();
-    });
-
-    focusBtn.addEventListener('click', () => {
-      stopTimer();
-      mode = 'focus';
-      totalSeconds = focusDuration;
-      renderTimer();
-    });
-
-    breakBtn.addEventListener('click', () => {
-      stopTimer();
-      mode = 'break';
-      totalSeconds = breakDuration;
-      renderTimer();
-    });
-
-    renderTimer();
+    render();
   </script>
 </body>
 </html>
